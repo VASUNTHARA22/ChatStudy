@@ -72,6 +72,52 @@ User authentication mechanisms are essential to ensure secure and authorized acc
 Client-server chat applications are versatile tools that facilitate real-time communication between users over a network. They incorporate various components, including server-side and client-side elements, and must consider factors such as security, scalability, and concurrency. As technology continues to advance, client-server chat applications remain integral for collaborative communication in various domains.
 
 Client-server chat applications are foundational to real-time communication over networks. They incorporate principles of socket programming, communication protocols, and security mechanisms to provide a seamless user experience. Understanding the basics of client-server chat applications is essential for developers involved in networked application development, as they form the backbone of various collaborative communication systems. As technology evolves, chat applications continue to adapt, incorporating new features and technologies to enhance user interaction and connectivity.
+### CLIENT:
+```
+import socket
+client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+client.connect(("localhost", 8000))
+done = False
+while not done:
+    msg = input("Message: ")
+    client.send(msg.encode('utf-8'))
+
+    if msg == "quit":
+        done = True
+    else:
+        reply = client.recv(1024).decode('utf-8')
+        print("Server:", reply)
+client.close()
+```
+### SERVER:
+```
+import socket
+
+server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+server.bind(('localhost', 8000))
+server.listen(1) 
+print("Server is waiting for connection...")
+client, addr = server.accept()
+print(f"Connected with {addr}")
+
+done = False
+
+while not done:
+    msg = client.recv(1024).decode('utf-8')
+
+    if msg == "quit":
+        done = True
+        client.send("Goodbye!".encode('utf-8'))
+    else:
+        print("Client:", msg)
+        client.send(f"Echo: {msg}".encode('utf-8'))
+
+client.close()
+server.close()
+```
+### OUTPUT:
+
+<img width="1560" height="281" alt="image" src="https://github.com/user-attachments/assets/196cc87e-a61b-4762-b28e-f80a7b7eb2b9" />
 
 
 ## Result:
